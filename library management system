@@ -1,0 +1,95 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+struct ticket_booking{
+	int ticket_no;
+	char name[50];
+	struct ticket_booking *next;
+}*front=NULL,*rear=NULL,*top=NULL;
+void book_ticket(char name[],int tn){
+	struct ticket_booking *nn;
+	nn=(struct ticket_booking*)malloc(sizeof(struct ticket_booking));
+	nn->ticket_no=tn;	
+	strcpy(nn->name,name);
+	nn->next=NULL;
+	if(front==NULL){
+		front=rear=nn;
+	}
+	else{
+		rear->next=nn;
+		rear=nn;
+	}
+	printf("Ticket booked for:%s.Ticket number:%d\n",name,tn);
+}
+void display_tickets(){
+	struct ticket_booking *temp=front;
+	if(front==NULL)
+		printf("No ticket bookings\n");
+	else{
+		printf("Booked tickets\n");
+		while(temp!=NULL){
+			printf("Ticket no: %d | Name: %s\n",temp->ticket_no,temp->name);
+			temp=temp->next;
+		}
+	}
+}
+void cancel_ticket(){
+	if(front==NULL){
+		printf("No bookings to cancel\n");
+		return;
+	}
+	else{
+		struct ticket_booking *del;
+		del=front;
+		front=front->next;
+		if(front==NULL)
+			rear=NULL;
+		del->next=top;
+		top=del;
+		printf("Ticket number:%d cancelled for:%s\n",del->ticket_no,del->name);
+	}
+}
+void display_cancellation(){
+	struct ticket_booking *temp;
+	temp=top;
+	if(top==NULL){
+		printf("No tickets cancelled\n");
+		return;
+	}
+	printf("Cancelled tickets\n");
+	while(temp!=NULL){
+		printf("Ticket no: %d | Name: %s\n",temp->ticket_no,temp->name);
+		temp=temp->next;
+	}
+}
+int main(){
+	int choice,tn=16325;
+	char name[30];
+	while(1){
+		printf("\n**ONLINE TICKET BOOKING SYSTEM\n");
+		printf("1.Book ticket\n2.Display tickets\n3.Cancel tickets\n4.Display cancel tickets\n5.Exit\n");
+		printf("Enter a choice:");
+		scanf("%d",&choice);
+		switch(choice){
+			case 1:
+				printf("Enter a name:");
+				scanf("%s",name);
+				book_ticket(name,tn++);
+				break;
+			case 2:
+				display_tickets();
+				break;
+			case 3:
+				cancel_ticket();
+				break;
+			case 4:
+				display_cancellation();
+				break;
+			case 5:
+				printf("Thank you");
+				exit(0);
+			default:
+				printf("Invalid choice");
+		}
+	}
+}
